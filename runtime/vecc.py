@@ -106,7 +106,6 @@ if __name__ == '__main__':
             '%s/%s_kernels.c' % (cmdargs.kerneldir, in_base_name),
             k_builder.src_ast(),
             [
-                '#include <veintrin_common.h>',
                 '#include <velintrin.h>',
                 '#include <velintrin_gen.h>',
                 '#include <velintrin_approx.h>'
