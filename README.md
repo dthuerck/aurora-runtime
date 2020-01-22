@@ -66,7 +66,7 @@ please refer to ``CMakeLists.txt``.
 ## Creating a new project
 
 Ideally, use this repository as a scaffolding:
-1. Clone this repository
+1. Clone this repository and run the ``init.sh``.
 2. Replace ``gema.cve``, ``gemm.cve`` by your kernels.
 3. Replace ``app-test.cc`` by your application's source.
 4. Change the ``CMakeLists.txt`` accordingly.
