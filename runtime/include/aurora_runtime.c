@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "aurora_runtime.h"
+#include <ve_kernel_names.h>
 
 veo_bundle_t _veo_inst;
 
@@ -49,10 +50,15 @@ ve_init(
     _veo_inst.sym_malloc = veo_get_sym(_veo_inst.hproc, 0UL, "ve_helper_malloc");
     _veo_inst.sym_free = veo_get_sym(_veo_inst.hproc, 0UL, "ve_helper_free");
 
-    /* this is just for avoiding the symbol search at runtime. it must
-       be replaced by a loop over a generated list of symbols, and is here
-       only as a placeholder until that has been implemented */
-    _veo_inst.sym = veo_get_sym(_veo_inst.hproc, 0, "gemm_op_d__omp__");
+    /*
+      Find all kernel function symbol addresses before creating the context.
+      This is a workaround for VEO not scheduling properly on 8 cores.
+    */
+    int i = 0;
+    char *c = _ve_kernel_funcs_[0];
+    for(; *c != '\0'; c = _ve_kernel_funcs_[++i]) {
+        uint64_t _dummy = veo_get_sym(_veo_inst.hproc, 0, c);
+    }
 
     _veo_inst.hctxt = veo_context_open(_veo_inst.hproc);
     if(_veo_inst.hctxt == NULL)

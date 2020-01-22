@@ -6,6 +6,9 @@ class WrapperBuilder:
 		self._k_id = kernel_id
 		self._k_def = kernel_node
 
+	def build_pe_wrapper_func_name(self, pg_size):
+		return self._func_name(pg_size)
+
 	def build_pe_wrapper_header(self, pg_size):
 		return self._func_decl(pg_size)
 
@@ -103,15 +106,26 @@ class WrapperBuilder:
 			None,
 			None)
 
+	def _func_name(self, pg_size):
+		# kernel variant id includes the PG size
+		if(pg_size is None):
+			ki_id = '"%s__omp__"' % self._k_id
+		else:
+			ki_id = '"%s__%d__omp__"' % (self._k_id, pg_size)
+		return pcp.c_ast.Constant('string', ki_id)
+
+
 class WrapperFileBuilder:
 
 	def __init__(self):
 		self._w_header = []
 		self._w_code = []
+		self._w_func_names = [] 
 
 	def add_kernel_instance(self, kernel_id, kernel_node, pg_size):
 		bob = WrapperBuilder(kernel_id, kernel_node)
 
+		self._w_func_names.append(bob.build_pe_wrapper_func_name(pg_size))
 		self._w_header.append(bob.build_pe_wrapper_header(pg_size))
 		self._w_code.append(bob.build_pe_wrapper_code(pg_size))
 
@@ -122,3 +136,27 @@ class WrapperFileBuilder:
 	def src_ast(self):
 		return pcp.c_ast.FileAST(
 			pcp.c_ast.DeclList(self._w_code))
+
+	def fname_arr_ast(self):
+		self._w_func_names.append(pcp.c_ast.Constant('string', '""'))
+		return pcp.c_ast.FileAST([
+			pcp.c_ast.Decl(
+				name='_ve_kernel_funcs_',
+                                quals=['const'],
+                                storage=[],
+                                funcspec=[],
+                                type=pcp.c_ast.ArrayDecl(
+                                        type=pcp.c_ast.PtrDecl(quals=[],
+                                                     type=pcp.c_ast.TypeDecl(
+                                                             '_ve_kernel_funcs_',
+                                                             ['const'],
+                                                             type=pcp.c_ast.IdentifierType(names=['char'])
+                                                     )
+                                        ),
+                                        dim=None,
+                                        dim_quals=[]
+                                ),
+                                init=pcp.c_ast.InitList(self._w_func_names),
+                                bitsize=None
+                        ),
+                ])
