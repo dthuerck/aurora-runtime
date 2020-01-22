@@ -122,7 +122,6 @@ class WrapperFileBuilder:
 	def add_kernel_instance(self, kernel_id, kernel_node, pg_size):
 		bob = WrapperBuilder(kernel_id, kernel_node)
 
-		self._w_func_names.append(bob.build_pe_wrapper_func_name(pg_size))
 		self._w_header.append(bob.build_pe_wrapper_header(pg_size))
 		self._w_code.append(bob.build_pe_wrapper_code(pg_size))
 
