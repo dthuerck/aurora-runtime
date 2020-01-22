@@ -36,5 +36,6 @@ extern _timer * __T;
 #define CLEAR_TIMER(str) (__T->clear(str));
 #define STOP_TIMER(str) (__T->stop(str));
 #define PRINT_TIMER(str) (printf("(Timing) %s: %f ms\n", str, __T->get_ms(str)));
+#define PRINT_PERF(str,ops) (printf("(Performance) %s: %f MFLOPS\n", str, ops/(__T->get_ms(str)*1000)));
 #define PRINT_REPEAT_TIMER(str, ctr) (printf("(Timing) %s: %f ms\n", str, __T->get_ms(str) / ctr));
 #define GET_TIMER(str) (__T->get_ms(str))

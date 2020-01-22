@@ -129,11 +129,13 @@ main(
     gema_op_d__offload__(dev_As, dev_Bs, dev_GEMA_Cs, batch);
     STOP_TIMER("Batched GEMA");
     PRINT_TIMER("Batched GEMA");
+    PRINT_PERF("Batched GEMA", batch*(double)m*(double)m);
 
     START_TIMER("Batched GEMM");
     gemm_op_d__offload__(dev_As, dev_Bs, dev_GEMM_Cs, batch);
     STOP_TIMER("Batched GEMM");
     PRINT_TIMER("Batched GEMM");
+    PRINT_PERF("Batched GEMM", batch*(double)m*(double)m*(double)m*2);
 
     /* transfer the results back */
     std::vector<scalar_t> d_GEMA_Cs(batch * m * m * sizeof(scalar_t));
