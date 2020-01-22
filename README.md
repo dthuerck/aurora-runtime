@@ -32,7 +32,7 @@ For installation,
     ```
 
 That's it! Now we can build an example application featuring GEMA (256x256
-matrix addition) and GEMM (256x256 matrix multiplication):
+batched matrix addition) and GEMM (256x256 batched matrix multiplication):
 
 ```
 $ mkdir build && cd build
@@ -62,6 +62,16 @@ the annotation **__ve_kernel__** and saved with a ``.cve`` extension.
 
 The build process is fully automated and supported by CMake. For details,
 please refer to ``CMakeLists.txt``.
+
+## Creating a new project
+
+Ideally, use this repository as a scaffolding:
+1. Clone this repository
+2. Replace ``gema.cve``, ``gemm.cve`` by your kernels.
+3. Replace ``app-test.cc`` by your application's source.
+4. Change the ``CMakeLists.txt`` accordingly.
+
+That's it!
 
 ## Standing on the shoulder of giants...
 
