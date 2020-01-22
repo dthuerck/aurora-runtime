@@ -12,7 +12,7 @@ set(CMAKE_C_FLAGS "${CFLAGS}")
 set(CMAKE_CXX_FLAGS "${CFLAGS}")
 
 # append the local cmake files to the cmake module path
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../../runtime/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/.runtime/cmake")
 
 # list directories where Aurora SDK components may reside
 set(AURORA_SEARCH_PATHS 

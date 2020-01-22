@@ -99,7 +99,7 @@ function(ve_build_offload) # source files: ARGV / ARGN
     endforeach()
 
     # add device kernels for init
-    SET(__initkern_src ${CMAKE_SOURCE_DIR}/../../runtime/include/aurora_runtime_kernels.c)
+    SET(__initkern_src ${CMAKE_SOURCE_DIR}/.runtime/include/aurora_runtime_kernels.c)
     SET(__initkern_obj ${CMAKE_BINARY_DIR}/aurora_runtime_kernels.o)
     add_custom_command(
         VERBATIM
@@ -147,7 +147,7 @@ function(ve_build_offload) # source files: ARGV / ARGN
         list(APPEND __VE_OBJECTS ${__o_file})
     endforeach()
 
-    SET(__runtime_src ${CMAKE_SOURCE_DIR}/../../runtime/include/aurora_runtime.c)
+    SET(__runtime_src ${CMAKE_SOURCE_DIR}/.runtime/include/aurora_runtime.c)
     SET(__runtime_obj ${CMAKE_BINARY_DIR}/aurora_runtime.o)
     add_custom_command(
         VERBATIM

@@ -54,14 +54,13 @@ The following cache variables may also be set:
 #]=======================================================================]
 
 # basic variables
-set(AURORA_VERSION "0.1")
+set(AURORA_VERSION "0.2")
 
 # define some basic paths where to look at
 set(AURORA_BASE_PATHS 
 	"/opt/nec" 
 	${AURORA_SEARCH_PATHS}
-	${CMAKE_SOURCE_DIR}
-	${CMAKE_SOURCE_DIR}/../..)
+	${CMAKE_SOURCE_DIR})
 
 # include functions for the build systems
 include(find_functions)
