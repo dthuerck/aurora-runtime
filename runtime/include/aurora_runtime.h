@@ -27,6 +27,8 @@ typedef struct {
     veo_thr_ctxt * hctxt;
     veo_args * args;
     uint64_t sym;
+    uint64_t sym_malloc;
+    uint64_t sym_free;
 } veo_bundle_t;
 
 extern veo_bundle_t _veo_inst;

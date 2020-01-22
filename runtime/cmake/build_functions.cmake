@@ -22,6 +22,7 @@ function(ve_build_offload) # source files: ARGV / ARGN
 
     # determine paths of runtime-generated source code files and create a
     # VECC call to generate them
+    set(__KERNEL_NAMES "")
     set(__KERNEL_HEADERS "")
     set(__KERNEL_SOURCES "")
     set(__WRAPPER_HEADERS "")
@@ -52,6 +53,14 @@ function(ve_build_offload) # source files: ARGV / ARGN
         list(APPEND __OFFLOAD_HEADERS ${__f_offload_header})
         list(APPEND __OFFLOAD_SOURCES ${__f_offload_source})
     endforeach()
+
+    # create a common symbol table for all generated kernel files
+    add_custom_command(
+        VERBATIM
+        OUTPUT "ve_kernel_names.h"
+        COMMAND /bin/bash -c "python ${AURORA_SYMBOL_TABLE_SCRIPT} --wrapperdir ${__WRAPPER_WORK_DIR} ${CMAKE_BINARY_DIR}"
+        DEPENDS ${ARGV}
+    )
 
     # compile kernel code using LLVM
     set(__KERNEL_OBJECTS "")
@@ -143,8 +152,8 @@ function(ve_build_offload) # source files: ARGV / ARGN
     add_custom_command(
         VERBATIM
         OUTPUT ${__runtime_obj}
-        COMMAND ${CMAKE_C_COMPILER} -w ${AURORA_CFLAGS} -D__VEO_STRUCTS__ -I${__AURORA_VEOFFLOAD_INCLUDE_DIR} -I${__AURORA_UDMA_INCLUDE_DIR} -I${__AURORA_RUNTIME_INCLUDE_DIR} -c ${__runtime_src}  -o ${__runtime_obj}
-        DEPENDS ${__runtime_src})
+        COMMAND ${CMAKE_C_COMPILER} -w ${AURORA_CFLAGS} -D__VEO_STRUCTS__ -I${__AURORA_VEOFFLOAD_INCLUDE_DIR} -I${__AURORA_UDMA_INCLUDE_DIR} -I${__AURORA_RUNTIME_INCLUDE_DIR} -I${CMAKE_BINARY_DIR} -c ${__runtime_src}  -o ${__runtime_obj}
+        DEPENDS ${__runtime_src} "ve_kernel_names.h")
     list(APPEND __VE_OBJECTS ${__runtime_obj})
 
     # return VE_OBJECTS to parent scope
@@ -165,8 +174,10 @@ function(ve_add_executable TARGET)
         ${__source_files})
     target_compile_options(${TARGET}
         PRIVATE -fopenmp)
-    target_link_options(${TARGET}
-        PRIVATE -fopenmp)
+    # target_link_options(${TARGET}
+    #     PRIVATE -fopenmp)
+    set_target_properties(${TARGET}
+        PROPERTIES LINK_FLAGS "-fopenmp")
     add_dependencies(${TARGET}
         build-ve-objects)
     target_link_libraries(${TARGET}

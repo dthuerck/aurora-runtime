@@ -103,11 +103,21 @@ class WrapperBuilder:
 			None,
 			None)
 
+	def _func_name(self, pg_size):
+		# kernel variant id includes the PG size
+		if(pg_size is None):
+			ki_id = '"%s__omp__"' % self._k_id
+		else:
+			ki_id = '"%s__%d__omp__"' % (self._k_id, pg_size)
+		return pcp.c_ast.Constant('string', ki_id)
+
+
 class WrapperFileBuilder:
 
 	def __init__(self):
 		self._w_header = []
 		self._w_code = []
+		self._w_func_names = [] 
 
 	def add_kernel_instance(self, kernel_id, kernel_node, pg_size):
 		bob = WrapperBuilder(kernel_id, kernel_node)

@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "aurora_runtime.h"
+#include <ve_kernel_names.h>
 
 veo_bundle_t _veo_inst;
 
@@ -45,25 +46,38 @@ ve_init(
         printf("[VE] Handle is NULL, exiting...");
         return VEO_COMMAND_ERROR;
     }
+    uint64_t init_sym = veo_get_sym(_veo_inst.hproc, 0UL, "ve_init");
+    _veo_inst.sym_malloc = veo_get_sym(_veo_inst.hproc, 0UL, "ve_helper_malloc");
+    _veo_inst.sym_free = veo_get_sym(_veo_inst.hproc, 0UL, "ve_helper_free");
+
+    /*
+      Find all kernel function symbol addresses before creating the context.
+      This is a workaround for VEO not scheduling properly on 8 cores.
+    */
+    int i = 0;
+    char *c = _ve_kernel_funcs_[0];
+    for(; *c != '\0'; c = _ve_kernel_funcs_[++i]) {
+        uint64_t _dummy = veo_get_sym(_veo_inst.hproc, 0, c);
+    }
+
     _veo_inst.hctxt = veo_context_open(_veo_inst.hproc);
     if(_veo_inst.hctxt == NULL)
     {
-        printf("[VE} Context is NULL, exiting...");
+        printf("[VE] Context is NULL, exiting...");
         return VEO_COMMAND_ERROR;
     }
 
     _veo_inst.args = veo_args_alloc();
     veo_args_clear(_veo_inst.args);
-
-    _veo_inst.udma_peer_id = veo_udma_peer_init(_veo_inst.ve_dev_id, 
-        _veo_inst.hproc, _veo_inst.hctxt, 0);
-
-    uint64_t init_sym = veo_get_sym(_veo_inst.hproc, 0UL, "ve_init");
+    
     uint64_t req = veo_call_async(_veo_inst.hctxt, init_sym, _veo_inst.args);
-
+    
     uint64_t retval;
     CHECK_VEO(veo_call_wait_result(_veo_inst.hctxt, req, &retval));
 
+    _veo_inst.udma_peer_id = veo_udma_peer_init(_veo_inst.ve_dev_id,
+                                _veo_inst.hproc, _veo_inst.hctxt, 0);
+    
     return VEO_COMMAND_OK;
 }
 
@@ -86,17 +100,28 @@ ve_malloc(
     uint64_t * slot, 
     const size_t bytes)
 {
-    CHECK_VEO(veo_alloc_mem(_veo_inst.hproc, slot, bytes));
+    uint64_t retval;
+    veo_args_clear(_veo_inst.args);
+    veo_args_set_u64(_veo_inst.args, 0, bytes);
+    uint64_t req = veo_call_async(_veo_inst.hctxt, _veo_inst.sym_malloc,
+                                  _veo_inst.args);
+    CHECK_VEO(veo_call_wait_result(_veo_inst.hctxt, req, &retval));
+    *slot = retval;
 }
 
 /* ************************************************************************** */
 
-void 
+void
 ve_free(
     uint64_t slot)
 {
-    CHECK_VEO(veo_free_mem(_veo_inst.hproc, slot));
-}   
+    uint64_t retval;
+    veo_args_clear(_veo_inst.args);
+    veo_args_set_u64(_veo_inst.args, 0, slot);
+    uint64_t req = veo_call_async(_veo_inst.hctxt, _veo_inst.sym_free,
+                                  _veo_inst.args);
+    CHECK_VEO(veo_call_wait_result(_veo_inst.hctxt, req, &retval));
+}
 
 /* ************************************************************************** */
 

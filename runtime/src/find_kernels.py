@@ -1,5 +1,7 @@
 import parser.pycparser as pcp
 
+################################################################################
+
 class LocateKernels(pcp.c_ast.NodeVisitor):
 
     def __init__(self):
@@ -31,3 +33,24 @@ class LocateKernels(pcp.c_ast.NodeVisitor):
         print('Kernel functions discovered:')
         for kern in self._kernels:
             print('  ', kern, ':', self._kernels[kern][0])
+
+################################################################################
+
+class GetFunctionTable(pcp.c_ast.NodeVisitor):
+
+    def __init__(self):
+        super().__init__()
+
+        self._kernels = []
+
+    def kernels(self, prop = None):
+        if(prop is not None):
+            self._kernels = prop
+
+        return self._kernels
+
+    def visit_FileAST(self, n):
+        for decl in n.ext:
+            self._kernels.append(decl.name)
+
+    

@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.12)
-project(aurora-gemm)
+cmake_minimum_required(VERSION 3.10)
+project(app-test)
 
 # host compiler settings
 set(CC "gcc")
@@ -22,9 +22,11 @@ set(AURORA_SEARCH_PATHS
 find_package(Aurora REQUIRED)
 
 # build all kernel components (object files are stored in VE_OBJECTS)
-ve_build_offload(gemm.cve)
+ve_build_offload(
+    gema.cve 
+    gemm.cve)
 
 # build main executable and link device objects
-ve_add_executable(app-gemm
+ve_add_executable(app-test
     timer.cc
-    app-gemm.cc)
+    app-test.cc)
