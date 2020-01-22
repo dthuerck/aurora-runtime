@@ -6,9 +6,6 @@ class WrapperBuilder:
 		self._k_id = kernel_id
 		self._k_def = kernel_node
 
-	def build_pe_wrapper_func_name(self, pg_size):
-		return self._func_name(pg_size)
-
 	def build_pe_wrapper_header(self, pg_size):
 		return self._func_decl(pg_size)
 

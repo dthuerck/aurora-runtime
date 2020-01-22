@@ -125,11 +125,6 @@ if __name__ == '__main__':
             ]
         ),
         (
-            '%s/ve_kernel_names.h' % (cmdargs.wrapperdir),
-            w_builder.fname_arr_ast(),
-            []
-        ),
-        (
             '%s/%s_offload.h' % (cmdargs.offloaddir, in_base_name),
             o_builder.header_ast(),
             []
