@@ -13,7 +13,9 @@ The installation is as easy as a breeze! The only dependencies on the target
 systems are:
 
 * python (>= 3.5)
-* NEC Aurora SDK (ncc and llvm/clang) - under ``/opt/nec``
+* cmake (>= 3.13)
+* NEC Aurora SDK (ncc, libs) - under ``/opt/nec``
+* LLVM-VE (llvm/clang) https://sx-aurora.com/repos/veos/ef_extra under ``/opt/nec``
 
 For installation, 
 
