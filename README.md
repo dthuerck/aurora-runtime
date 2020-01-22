@@ -1,11 +1,11 @@
 # aurora-runtime
 
-This package is an attempt to emulate NVIDIA's CUDA **Runtime** API [1], i.e.
+This package is an attempt to reproduce **NVIDIA's CUDA Runtime API**[1], i.e.
 enable the user to write device _kernels_  and launch them in a quasi-_grid_
-structure.
+structure on NEC's Aurora SX-TSUBASA vector engine.
 
-To that end, we wrap NEC's VE Offload [2] and UDMA [3] codes and wrap their
-APIs such that the result mimin CUDA's runtime API.
+To that end, we wrap NEC's VE Offload [2] and UDMA [3] APIs their such that
+the usage mimics CUDA's runtime API.
 
 ## Installation and Example
 

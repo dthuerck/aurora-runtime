@@ -54,7 +54,7 @@ The following cache variables may also be set:
 #]=======================================================================]
 
 # basic variables
-set(AURORA_VERSION "0.2")
+set(AURORA_VERSION "0.3")
 
 # define some basic paths where to look at
 set(AURORA_BASE_PATHS 
