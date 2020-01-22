@@ -9,11 +9,12 @@ APIs such that the result mimin CUDA's runtime API.
 
 ## Installation and Example
 
-The installation is as easy as a breeze! The only dependencies on the target
+The installation is as easy as a breeze! The dependencies on the target
 systems are:
 
 * python (>= 3.5)
 * cmake (>= 3.13)
+* reasonably new gcc/g++ (eg. from scl devtoolset-8)
 * NEC Aurora SDK (ncc, libs) - under ``/opt/nec``
 * LLVM-VE (llvm/clang) https://sx-aurora.com/repos/veos/ef_extra under ``/opt/nec``
 
