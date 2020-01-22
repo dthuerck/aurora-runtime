@@ -4,7 +4,7 @@
 echo "Cloning VE UDMA library..."
 mkdir -p .runtime/udma
 git clone https://github.com/SX-Aurora/veo-udma.git .runtime/udma
-/bin/bash -c "cd .runtime/udma && git checkout 49b7739"
+/bin/bash -c "cd .runtime/udma && git checkout 84dd019"
 
 # build UDMA library
 echo "Bulding VE UDMA library..."
